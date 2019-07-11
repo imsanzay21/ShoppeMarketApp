@@ -6,16 +6,18 @@ import { LayoutComponent } from './components/_layout/layout/layout.component';
 import { HomeComponent } from './components/home/home.component';
 import { RequestResetComponent } from './components/password/request-reset/request-reset.component';
 import { ResponseResetComponent } from './components/password/response-reset/response-reset.component';
+import { BeforeLoginService } from './services/before-login.service';
+import { AfterLoginService } from './services/after-login.service';
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent},
-  { path: 'request-reset', component: RequestResetComponent},
-  { path: 'response-reset', component: ResponseResetComponent},
-  { path: '**', redirectTo: '/login', pathMatch: 'full'},
+  { path: 'login', component: LoginComponent, canActivate: [BeforeLoginService] },
+  { path: 'register', component: RegisterComponent, canActivate: [BeforeLoginService]},
+  { path: 'request-reset', component: RequestResetComponent, canActivate: [BeforeLoginService]},
+  { path: 'response-reset', component: ResponseResetComponent, canActivate: [BeforeLoginService]},
   { path: '', component: LayoutComponent, children: [
-    { path: 'dashboard/home', component: HomeComponent }
-  ]}
+    { path: 'dashboard/home', component: HomeComponent, canActivate: [AfterLoginService] }
+  ]},
+  { path: '**', redirectTo: '/login', pathMatch: 'full'}
 ];
 
 @NgModule({
